@@ -1,0 +1,5 @@
+node_modules
+config.sample.coffee
+public/js/*.coffee
+public/js/*.js
+public/css/
