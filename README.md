@@ -12,3 +12,5 @@ Start developing with a local server, automatic files build and livereload:
 * `gulp`
 
 In order to build the project run `gulp build`
+
+Sequelize CLI: `node_modules/.bin/sequelize`

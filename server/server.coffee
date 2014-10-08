@@ -5,10 +5,10 @@ cookieParser = require('cookie-parser')
 bodyParser = require('body-parser')
 methodOverride = require('method-override')
 exphbs  = require('express-handlebars')
+db = require('./models')
 
 # Configs
-config = require('./../config')[process.env.APP_ENV]
-port = config.port
+config = require('./../config.json')[process.env.APP_ENV]
 
 # Server instance
 server = null
@@ -37,9 +37,17 @@ Router.bindRoutes(app)
 # Public
 app.use(express.static(__dirname + '/../public'))
 
-server = app.listen(port)
-
-console.log "server started on port #{port}"
+# Startup database connection and start app
+db
+  .sequelize
+  .sync
+    force: false
+  .complete (err)->
+    if err
+      throw err[0]
+    else
+      server = app.listen(config.sitePort)
+      console.log 'App started on port ' + config.sitePort
 
 module.exports =
   stop: ()->
