@@ -1,5 +1,9 @@
 module.exports = (sequelize, DataTypes)->
   Picture = sequelize.define 'Picture',
+    id:
+      type: DataTypes.INTEGER
+      autoIncrement: true
+      primaryKey: true
     image: DataTypes.STRING
     thumbnail: DataTypes.STRING
     title:
