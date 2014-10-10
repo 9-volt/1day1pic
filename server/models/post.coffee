@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes)->
       autoIncrement: true
       primaryKey: true
     date: DataTypes.DATE
+    title: DataTypes.STRING
     available_pictures:
       type: DataTypes.INTEGER(4)
       defaultValue: 0
