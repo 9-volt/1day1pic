@@ -1,9 +1,9 @@
 <div class="container">
-  <h1>12/10/2014</h1>
-  <h2>i love green stuff</h2>
+  <h1>12/10/2014 {{post.date}}</h1>{{post.title}}
+  {{#if post.title}}<h2>{{post.title}}</h2>{{/if}}
 
   <div class="option">
-    <img src="http://photos-d.ak.instagram.com/hphotos-ak-xfa1/10610996_1493254900960987_701261076_n.jpg" alt="Photo Ana">
+    <img src="/pictures/{{picture1.thumbnail}}" alt="{{picture1.title}}">
     <button type="button" class="btn btn-vote">vote for bumbu</button>
     <div class="progress ranking">
       <div class="progress-bar votes" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
@@ -13,7 +13,7 @@
   </div>
 
   <div class="option">
-    <img src="http://photos-a.ak.instagram.com/hphotos-ak-xaf1/10632337_1559737164247864_1595891101_n.jpg" alt="Photo Bumbu">
+    <img src="/pictures/{{picture2.thumbnail}}" alt="{{picture1.title}}">
     <button type="button" class="btn btn-vote">vote for ana</button>
     <div class="progress ranking">
       <div class="progress-bar votes" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
