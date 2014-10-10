@@ -3,6 +3,12 @@ module.exports = (sequelize, DataTypes)->
     name:
       type: DataTypes.STRING(32)
       defaultValue: 'No name'
+    email:
+      type: DataTypes.STRING
+      allowNull: false
+    password:
+      type: DataTypes.STRING
+      allowNull: false
   ,
     classMethods:
       associate: (models)->
