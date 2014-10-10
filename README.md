@@ -14,6 +14,12 @@ Start developing with a local server, automatic files build and livereload:
 
 In order to build the project run `gulp build`
 
+### Database
+
 Application requires a MySQL database. Database credentials are located in config.json file.
 
 Sequelize CLI: `node_modules/.bin/sequelize`
+
+Run migrations: `node_modules/.bin/sequelize db:migrate`
+Undo a migration: `node_modules/.bin/sequelize db:migrate:undo`
+Mock a migration: `node_modules/.bin/sequelize migration:create`
