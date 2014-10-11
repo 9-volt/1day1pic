@@ -12,6 +12,7 @@ module.exports =
         seed = Math.floor(Math.random() * 999)
 
         res.render 'index',
+          pageTitle: '1day1pic'
           post: post
           picture1: post.Pictures[seed % 2]
           picture2: post.Pictures[(seed + 1) % 2]
