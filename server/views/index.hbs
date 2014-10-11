@@ -6,8 +6,8 @@
   {{> picture picture2}}
 
   <ul class="pager pager-align">
-    <li class="previous"><a href="#">&larr; Older</a></li>
-    <li class="next"><a href="#">Newer &rarr;</a></li>
+    {{#if previousPostLink}}<li class="previous"><a href="{{previousPostLink}}">&larr; Older</a></li>{{/if}}
+    {{#if nextPostLink}}<li class="next"><a href="{{nextPostLink}}">Newer &rarr;</a></li>{{/if}}
   </ul>
 
 </div>

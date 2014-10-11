@@ -30,11 +30,18 @@ postController =
       seed = Math.floor(Math.random() * 999)
 
       # Check if there are older and newer pictures
+      db.Post.getPreviousPost post, (err, previousPost)->
+        db.Post.getNextPost post, (err, nextPost)->
 
-      res.render 'index',
-        pageTitle: '1day1pic'
-        post: post
-        picture1: post.Pictures[seed % 2]
-        picture2: post.Pictures[(seed + 1) % 2]
+          previousPostLink = if not previousPost? then null else '/post/' + moment(previousPost.date).format('DDMMMYYYY')
+          nextPostLink = if not nextPost? then null else '/post/' + moment(nextPost.date).format('DDMMMYYYY')
+
+          res.render 'index',
+            pageTitle: '1day1pic'
+            post: post
+            picture1: post.Pictures[seed % 2]
+            picture2: post.Pictures[(seed + 1) % 2]
+            previousPostLink: previousPostLink
+            nextPostLink: nextPostLink
 
 module.exports = postController
