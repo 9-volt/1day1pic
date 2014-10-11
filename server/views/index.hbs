@@ -2,25 +2,8 @@
   <h1>{{date_format post.date}}</h1>{{post.title}}
   {{#if post.title}}<h2>{{post.title}}</h2>{{/if}}
 
-  <div class="option">
-    <img src="/pictures/{{picture1.thumbnail}}" alt="{{picture1.title}}">
-    <button type="button" class="btn btn-vote">vote for bumbu</button>
-    <div class="progress ranking">
-      <div class="progress-bar votes" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-        32 VOTES
-      </div>
-    </div>
-  </div>
-
-  <div class="option">
-    <img src="/pictures/{{picture2.thumbnail}}" alt="{{picture1.title}}">
-    <button type="button" class="btn btn-vote">vote for ana</button>
-    <div class="progress ranking">
-      <div class="progress-bar votes" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
-        22 VOTES
-      </div>
-    </div>
-  </div>
+  {{> picture picture1}}
+  {{> picture picture2}}
 
   <ul class="pager pager-align">
     <li class="previous"><a href="#">&larr; Older</a></li>
