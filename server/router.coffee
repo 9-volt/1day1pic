@@ -1,5 +1,6 @@
 Post = require('./controller/post')
 Panel = require('./controller/panel')
+Auth = require('./controller/auth')
 passport = require('./helpers/passport')
 
 module.exports =
@@ -7,7 +8,8 @@ module.exports =
     app.get '/', Post.getIndex
     app.get '/post/:date', Post.getDate
 
-    app.get '/login', Panel.getLogin
-    app.post '/auth/local', Panel.postLogin
-    app.get '/logout', Panel.getLogout
+    app.get '/login', Auth.getLogin
+    app.post '/auth/local', Auth.postLogin
+    app.get '/logout', Auth.getLogout
+
     app.get '/panel', passport.requireAuth, Panel.get
