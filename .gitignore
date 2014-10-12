@@ -1,5 +1,5 @@
 node_modules
-config.sample.coffee
+config.json
 public/js/*.coffee
 public/js/*.js
 public/css/

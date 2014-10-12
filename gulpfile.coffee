@@ -51,7 +51,7 @@ gulp.task 'development-script', ()->
     .pipe(gulp.dest('./public/js'))
 
   # Build sources
-  gulp.src('./app/js/script.coffee')
+  gulp.src('./app/js/*.coffee')
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(coffee({bare: true, join: true}).on('error', gutil.log))

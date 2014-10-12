@@ -6,6 +6,7 @@
     "database": "1day1pic",
     "host": "127.0.0.1",
     "dialect": "mysql",
+    "sessionSecret": "secret",
     "sitePort": 8000,
     "baseUrl": "http://localhost:8000"
   },
@@ -16,6 +17,7 @@
     "database": "1day1pic_test",
     "host": "127.0.0.1",
     "dialect": "mysql",
+    "sessionSecret": "secret",
     "sitePort": 8000,
     "baseUrl": "http://localhost:8000"
   },
@@ -26,6 +28,7 @@
     "database": "1day1pic",
     "host": "127.0.0.1",
     "dialect": "mysql",
+    "sessionSecret": "secret",
     "sitePort": 80,
     "baseUrl": "http://1day1pic.9vo.lt"
   }
