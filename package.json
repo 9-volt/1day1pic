@@ -33,6 +33,7 @@
     "del": "~0.1.3"
   },
   "dependencies": {
+    "express-mysql-session": "^0.2.0",
     "express-session": "^1.8.2",
     "lodash": "^2.4.1",
     "moment": "^2.8.3",

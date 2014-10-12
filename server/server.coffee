@@ -5,6 +5,7 @@ cookieParser = require('cookie-parser')
 bodyParser = require('body-parser')
 methodOverride = require('method-override')
 session = require('express-session')
+SessionStore = require('express-mysql-session')
 exphbs  = require('express-handlebars')
 db = require('./models')
 passport = require('./helpers/passport')
@@ -35,7 +36,15 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use(methodOverride())
 # Sessions
-app.use(session({secret: config.sessionSecret}))
+app.use session
+  secret: config.sessionSecret
+  key: 'connect.sid'
+  store: new SessionStore
+    host: config.host
+    port: 3306
+    user: config.username
+    password: config.password
+    database: config.database
 # passport initialization
 app.use(passport.initialize())
 app.use(passport.session())
