@@ -31,12 +31,10 @@ passport.use new LocalStrategy
       .error (err)->
         done(err)
 
-# passport.requireAuth = (req, res, next)->
-#   # check if the user is logged in
-#   if not req.isAuthenticated()
-#     req.session.messages = 'You need to login to view this page'
-#     res.redirect('/login')
+passport.requireAuth = (req, res, next)->
+  return next() if req.isAuthenticated()
 
-#   next()
+  req.session.messages = 'You need to login to view this page'
+  res.redirect('/login')
 
 module.exports = passport
