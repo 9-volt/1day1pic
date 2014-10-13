@@ -1,5 +1,5 @@
 db = require('../models')
-moment = require 'moment'
+dateHelper = require('../helpers/date')
 
 postController =
   getIndex: (req, res)->
@@ -11,12 +11,10 @@ postController =
         postController.renderPost req, res, post
 
   getDate: (req, res)->
-    paramDate = moment(req.param('date'), 'DDMMMYYYY')
-    today = moment(paramDate).toDate()
-    tomorrow = moment(paramDate).add(1, 'd').toDate()
+    utcDayStart = dateHelper.getUtcDayStart(dateHelper.parseUrlFormat(req.param('date')))
 
     # Get the post from date specified in params
-    db.Post.find({where: {date: {between: [today, tomorrow]}}, include: [db.Picture]})
+    db.Post.find({where: {date: utcDayStart}, include: [db.Picture]})
       .error (error)->
         res.send('404')
       .then (post)=>
@@ -33,8 +31,8 @@ postController =
       db.Post.getPreviousPost post, (err, previousPost)->
         db.Post.getNextPost post, (err, nextPost)->
 
-          previousPostLink = if not previousPost? then null else '/post/' + moment(previousPost.date).format('DDMMMYYYY')
-          nextPostLink = if not nextPost? then null else '/post/' + moment(nextPost.date).format('DDMMMYYYY')
+          previousPostLink = if not previousPost? then null else '/post/' + dateHelper.getUrlFormat(previousPost.date)
+          nextPostLink = if not nextPost? then null else '/post/' + dateHelper.getUrlFormat(nextPost.date)
 
           res.render 'index',
             pageTitle: '1day1pic'

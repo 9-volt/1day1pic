@@ -4,8 +4,8 @@ db = require('../models')
 passport = require('../helpers/passport')
 Busboy = require('busboy')
 ExifImage = require('exif').ExifImage
-moment = require('moment')
 easyimage = require('easyimage')
+dateHelper = require('../helpers/date')
 
 panelController =
   get: (req, res)->
@@ -34,10 +34,10 @@ panelController =
     panelController.getExifData picturePath, (err, data)->
       if err then return res.send '404 - error extracting exif data from image, ' + err.message
 
-      dateTimeOriginal = data.exif?.DateTimeOriginal
-      momentDate = moment(dateTimeOriginal, 'YYYY:MM:DD HH:mm:ss')
+      exifDate = dateHelper.parseExifFormat(data.exif?.DateTimeOriginal)
+      date = dateHelper.getUtcDayStart(exifDate)
 
-      panelController.thisDayPictureExists momentDate, (err, exists)->
+      panelController.thisDayPictureExists date, (err, exists)->
         if err then return res.send '404 - error while checking for same day image', + err.message
         if exists then return res.send '404 - a picture for this day exists in database'
 
@@ -55,7 +55,7 @@ panelController =
               image: pictureName
               thumbnail: thumbnailName
               title: 'no title'
-              momentDate: momentDate
+              date: date
               user: req.user
             , (err, picture)->
               if err then return res.send '404 - error while persisting image to db'
@@ -74,7 +74,7 @@ panelController =
     catch error
       return cb(error, null)
 
-  thisDayPictureExists: (momentDate, cb)->
+  thisDayPictureExists: (date, cb)->
     cb(null, false)
     # Check if picture for this day and user exists
     # db.Post.find({where: {date: {between: [today, tomorrow]}}, include: [db.Picture]})
@@ -111,7 +111,7 @@ panelController =
 
   createPicture: (options, cb)->
     # Get or create Post
-    db.Post.getOrCreateByDate options.momentDate, (err, post)->
+    db.Post.getOrCreateByDate options.date, (err, post)->
       # Persist picture in DB
       db.Picture.create
         image: options.image

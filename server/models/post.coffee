@@ -30,13 +30,8 @@ module.exports = (sequelize, DataTypes)->
           .then (post)->
             cb null, post
 
-      getOrCreateByDate: (momentDate, cb)->
-        momentDayStart = moment(momentDate).hour(0).minute(0).second(0)
-
-        today = moment(momentDayStart).toDate()
-        tomorrow = moment(momentDayStart).add(1, 'd').toDate()
-
-        Post.find({where: {date: {between: [today, tomorrow]}}})
+      getOrCreateByDate: (date, cb)->
+        Post.find({where: {date: date}})
           .error (error)->
             cb(error, null)
           .then (post)->
@@ -44,7 +39,7 @@ module.exports = (sequelize, DataTypes)->
               cb(null, post)
             else
               Post.create
-                date: today
+                date: date
                 title: ''
               .error (err)->
                 cb(err, null)
