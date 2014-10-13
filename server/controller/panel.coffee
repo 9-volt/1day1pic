@@ -37,7 +37,7 @@ panelController =
       exifDate = dateHelper.parseExifFormat(data.exif?.DateTimeOriginal)
       date = dateHelper.getUtcDayStart(exifDate)
 
-      panelController.thisDayPictureExists date, (err, exists)->
+      panelController.thisDayPictureExists date, req.user, (err, exists)->
         if err then return res.send '404 - error while checking for same day image', + err.message
         if exists then return res.send '404 - a picture for this day exists in database'
 
@@ -74,14 +74,18 @@ panelController =
     catch error
       return cb(error, null)
 
-  thisDayPictureExists: (date, cb)->
-    cb(null, false)
-    # Check if picture for this day and user exists
-    # db.Post.find({where: {date: {between: [today, tomorrow]}}, include: [db.Picture]})
-    #   .error (error)->
-    #     res.send('404')
-    #   .then (post)=>
-    #     postController.renderPost req, res, post
+  thisDayPictureExists: (date, user, cb)->
+    db.Post.find({where: {date: date}, include: [db.Picture]})
+      .error (err)->
+        cb err, null
+      .success (post)->
+        if post? and post.Pictures?
+          myPictures = post.Pictures.filter (picture)->
+            picture.UserId is user.id
+
+          cb(null, myPictures.length > 0)
+        else
+          cb(null, false)
 
   createThumbnail: (picturePath, pictureThumbPath, cb)->
     # Get info about image
