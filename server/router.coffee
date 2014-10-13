@@ -13,3 +13,4 @@ module.exports =
     app.get '/logout', Auth.getLogout
 
     app.get '/panel', passport.requireAuth, Panel.get
+    app.post '/panel/pictures/upload', passport.requireAuth, Panel.pictureUpload

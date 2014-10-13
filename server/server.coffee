@@ -8,6 +8,7 @@ session = require('express-session')
 SessionStore = require('express-mysql-session')
 exphbs  = require('express-handlebars')
 db = require('./models')
+fs = require('fs')
 passport = require('./helpers/passport')
 
 # Configs
@@ -19,7 +20,18 @@ server = null
 # Modules
 Router = require('./router')
 
+picturesPath = __dirname + '/../public/pictures'
+tmpPath = __dirname + '/../tmp'
+
+# Check if necessary folders exist
+if not fs.existsSync(picturesPath) then fs.mkdir(picturesPath)
+if not fs.existsSync(tmpPath) then fs.mkdir(tmpPath)
+
 app = express()
+# Folders
+app.set 'settings',
+  picturesFolderPath: picturesPath
+  tmpFolderPath: tmpPath
 # View engine
 app.set('views', __dirname + '/views/');
 app.engine '.hbs', exphbs

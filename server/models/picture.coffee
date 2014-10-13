@@ -18,3 +18,14 @@ module.exports = (sequelize, DataTypes)->
       associate: (models)->
         Picture.belongsTo(models.User)
         Picture.belongsTo(models.Post)
+    instanceMethods:
+      customSetPost: (post, cb)->
+        this.setPost(post)
+          .error (err)->
+            cb(err)
+          .success ->
+            post.increment({'available_pictures': 1})
+              .error (err)->
+                cb(err)
+              .success ->
+                cb()

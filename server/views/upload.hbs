@@ -1,0 +1,7 @@
+{{#if message}}{{message}}{{/if}}
+
+<form action="/panel/pictures/upload" method="post" enctype="multipart/form-data">
+  <input type="text" id="title" name="title">
+  <input type="file" name="file" id="file">
+  <button type="submit">Submit</button>
+</form>

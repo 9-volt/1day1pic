@@ -4,4 +4,4 @@ public/js/*.coffee
 public/js/*.js
 public/css/
 public/pictures/*
-!public/pictures/.gitkeepgit
+tmp/*
