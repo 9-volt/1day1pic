@@ -15,12 +15,13 @@ panelController =
   pictureUpload: (req, res)->
     busboy = new Busboy({ headers: req.headers })
     tmpFolderPath = req.app.get('settings').tmpFolderPath
+    tmpPicturePath = null
 
     busboy.on 'file', (fieldname, file, filename, encoding, mimetype) ->
       tmpPicturePath = path.join(tmpFolderPath, filename)
-
       file.pipe fs.createWriteStream(tmpPicturePath)
 
+    busboy.on 'finish', ()->
       panelController.processFile(req, res, tmpPicturePath)
 
     req.pipe busboy # start piping the data.
