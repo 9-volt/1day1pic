@@ -54,7 +54,7 @@ panelController =
 
           # Move files to public folder
           publicFolder = req.app.get('settings').picturesFolderPath
-          panelController.moveIntoPublic picturePath, pictureThumbPath, publicFolder, (err, pictureName, thumbnailName)->
+          panelController.moveIntoPublic picturePath, pictureThumbPath, publicFolder, pictureTitle, (err, pictureName, thumbnailName)->
             if err then return res.send '404 - error while moving pictures into public path'
 
             panelController.createPicture
@@ -109,15 +109,38 @@ panelController =
       , (err)->
         cb(err, null)
 
-  moveIntoPublic: (picturePath, pictureThumbPath, publicFolder, cb)->
-    # TODO: prevent collisions
+  moveIntoPublic: (picturePath, pictureThumbPath, publicFolder, pictureTitle, cb)->
     pictureName = path.basename(picturePath)
     thumbnailName = path.basename(pictureThumbPath)
+    pictureExtension = path.extname(picturePath)
+    thumbnailExtension = path.extname(pictureThumbPath)
 
-    fs.renameSync(picturePath, path.join(publicFolder, pictureName))
-    fs.renameSync(pictureThumbPath, path.join(publicFolder, thumbnailName))
+    # Generate file name from title
+    newPictureBaseName = pictureTitle.replace(/[^a-zA-Z0-9 -]/g, '').replace(/\s/, '-')
+    newPictureName = newPictureBaseName + pictureExtension
+    newThumbnailName = newPictureBaseName + '_thumb' + pictureExtension
 
-    cb null, pictureName, thumbnailName
+    # prevent collisions
+    newPictureName = panelController.getUniqueFileName(newPictureName, publicFolder)
+    newThumbnailName = panelController.getUniqueFileName(newThumbnailName, publicFolder)
+
+    fs.renameSync(picturePath, path.join(publicFolder, newPictureName))
+    fs.renameSync(pictureThumbPath, path.join(publicFolder, newThumbnailName))
+
+    cb null, newPictureName, newThumbnailName
+
+  getUniqueFileName: (fileName, publicFolder, cb)->
+    filePath = path.join(publicFolder, fileName)
+    fileExtension = path.extname(filePath)
+    fileTitle = path.basename(filePath, fileExtension)
+    number = 0
+
+    while fs.existsSync(filePath) and number < 1000
+      number += 1
+      fileName = fileTitle + '_' + number + fileExtension
+      filePath = path.join(publicFolder, fileName)
+
+    return fileName
 
   createPicture: (options, cb)->
     # Get or create Post
