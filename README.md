@@ -4,6 +4,11 @@ A site where each day we'll post 1 picture.
 
 ## Development
 
+Prerequisites:
+* Install [ImageMagic](http://www.imagemagick.org/).
+* Install [Node.js](http://nodejs.org/).
+* Install Gulp and CoffeeScript globally `npm install -g gulp coffee-script`
+
 Start developing with a local server, automatic files build and livereload:
 * `git clone`
 * `cd 1day1pic`
