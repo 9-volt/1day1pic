@@ -16,17 +16,22 @@ panelController =
     busboy = new Busboy({ headers: req.headers })
     tmpFolderPath = req.app.get('settings').tmpFolderPath
     tmpPicturePath = null
+    pictureTitle = 'no title'
 
     busboy.on 'file', (fieldname, file, filename, encoding, mimetype) ->
       tmpPicturePath = path.join(tmpFolderPath, filename)
       file.pipe fs.createWriteStream(tmpPicturePath)
 
+    busboy.on 'field', (fieldname, val, fieldnameTruncated, valTruncated)->
+      if fieldname is 'title' and val
+        pictureTitle = val
+
     busboy.on 'finish', ()->
-      panelController.processFile(req, res, tmpPicturePath)
+      panelController.processFile(req, res, tmpPicturePath, pictureTitle)
 
     req.pipe busboy # start piping the data.
 
-  processFile: (req, res, picturePath)->
+  processFile: (req, res, picturePath, pictureTitle)->
     if not fs.existsSync(picturePath) then return res.send '404 - uploaded picture does not exist'
 
     # TODO: Check if file is image
@@ -55,7 +60,7 @@ panelController =
             panelController.createPicture
               image: pictureName
               thumbnail: thumbnailName
-              title: 'no title'
+              title: pictureTitle
               date: date
               user: req.user
             , (err, picture)->
