@@ -28,3 +28,9 @@ Sequelize CLI: `node_modules/.bin/sequelize`
 Run migrations: `node_modules/.bin/sequelize db:migrate`
 Undo a migration: `node_modules/.bin/sequelize db:migrate:undo`
 Mock a migration: `node_modules/.bin/sequelize migration:create`
+
+### Run
+
+Before running in production - build sources: `gulp build`.
+
+Run in production: `NODE_ENV=production coffee server/server.coffee`

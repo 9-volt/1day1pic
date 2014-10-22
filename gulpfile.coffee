@@ -22,9 +22,9 @@ nodemon = require('gulp-nodemon')
 ############
 # Environment
 ############
-APP_ENV = 'development'
-if process.env?.APP_ENV? and process.env.APP_ENV in ['development', 'test', 'production'] then APP_ENV = process.env.APP_ENV
-process.env.APP_ENV = APP_ENV # Submit environment if it was not provided on running
+NODE_ENV = 'development'
+if process.env?.NODE_ENV? and process.env.NODE_ENV in ['development', 'test', 'production'] then NODE_ENV = process.env.NODE_ENV
+process.env.NODE_ENV = NODE_ENV # Submit environment if it was not provided on running
 
 ############
 # Child tasks

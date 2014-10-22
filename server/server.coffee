@@ -12,7 +12,7 @@ fs = require('fs')
 passport = require('./helpers/passport')
 
 # Configs
-config = require('./../config.json')[process.env.APP_ENV]
+config = require('./../config.json')[process.env.NODE_ENV]
 
 # Server instance
 server = null
