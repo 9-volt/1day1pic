@@ -1,5 +1,6 @@
 db = require('../models')
 dateHelper = require('../helpers/date')
+configHelper = require('../helpers/config')
 
 postController =
   getIndex: (req, res)->
@@ -34,7 +35,7 @@ postController =
           previousPostLink = if not previousPost? then null else '/post/' + dateHelper.getUrlFormat(previousPost.date)
           nextPostLink = if not nextPost? then null else '/post/' + dateHelper.getUrlFormat(nextPost.date)
 
-          res.render 'index',
+          res.render 'index', configHelper.renderOptions
             pageTitle: '1day1pic'
             post: post
             picture1: post.Pictures[seed % 2]

@@ -1,6 +1,5 @@
 {
   "development": {
-    "env": "DEV",
     "username": "root",
     "password": "password",
     "database": "1day1pic",
@@ -11,7 +10,6 @@
     "baseUrl": "http://localhost:8000"
   },
   "test": {
-    "env": "TEST",
     "username": "root",
     "password": null,
     "database": "1day1pic_test",
@@ -22,7 +20,6 @@
     "baseUrl": "http://localhost:8000"
   },
   "production": {
-    "env": "PROD",
     "username": "root",
     "password": "password",
     "database": "1day1pic",
