@@ -56,8 +56,6 @@ panelController =
       else
         date = dateHelper.getUtcDayStart(dateHelper.parseTextFormat(pictureDate))
 
-      console.log date
-
       panelController.thisDayPictureExists date, req.user, (err, exists)->
         if err then return res.send '404 - error while checking for same day image', + err.message
         if exists then return res.send '404 - a picture for this day exists in database'
