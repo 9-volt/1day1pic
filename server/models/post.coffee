@@ -1,4 +1,5 @@
 moment = require('moment')
+Sequelize = require('sequelize')
 
 module.exports = (sequelize, DataTypes)->
   Post = sequelize.define 'Post',
@@ -17,18 +18,46 @@ module.exports = (sequelize, DataTypes)->
         Post.hasMany(models.Picture)
 
       getPreviousPost: (post, cb)->
-        Post.find({where: {date: {lt: post.date}, available_pictures: 2}, order: [['date', 'DESC']]})
-          .error (error)->
-            cb error
-          .then (post)->
-            cb null, post
+        Post.find
+          where:
+            Sequelize.or(
+              available_pictures: 2
+              date: {lt: post.date}
+            ,
+              Sequelize.and
+                available_pictures: 1
+              ,
+                Sequelize.and
+                  date: {lt: post.date}
+                ,
+                  date: {lt: new Date(Date.now() - 86400000*3)}
+            )
+          order: [['date', 'DESC']]
+        .error (error)->
+          cb error
+        .then (post)->
+          cb null, post
 
       getNextPost: (post, cb)->
-        Post.find({where: {date: {gt: post.date}, available_pictures: 2}, order: [['date', 'ASC']]})
-          .error (error)->
-            cb error
-          .then (post)->
-            cb null, post
+        Post.find
+          where:
+            Sequelize.or(
+              available_pictures: 2
+              date: {gt: post.date}
+            ,
+              Sequelize.and
+                available_pictures: 1
+              ,
+                Sequelize.and
+                  date: {gt: post.date}
+                ,
+                  date: {gt: new Date(Date.now() - 86400000*3)}
+            )
+          order: [['date', 'ASC']]
+        .error (error)->
+          cb error
+        .then (post)->
+          cb null, post
 
       getOrCreateByDate: (date, cb)->
         Post.find({where: {date: date}})

@@ -52,13 +52,14 @@ th
     text-align center
     line-height 5em
 
-.container h1, h2
-  text-align: center
+.container
+  h1, h2
+    text-align: center
 
-  /h2
+  h2
     font-variant small-caps
 
-  /.option
+  .option
     width 50%
     float left
     text-align center
@@ -66,7 +67,13 @@ th
     img
       width 90%
 
-  /.btn-vote
+  .pictures-1
+    .option
+      width 66%
+      float none
+      margin 0 17%
+
+  .btn-vote
     width 90%
     margin 1em 0
     background-color $c_white
@@ -89,20 +96,20 @@ th
     &:focus
       outline none
 
-  /.ranking
+  .ranking
     margin 0 5%
     border-radius 0
     height 2em
     box-shadow none
 
-    /.votes
+    .votes
       border-radius 0
       line-height 2em
       font-size 1em
       box-shadow none
       background-color $c_turquoise
 
-  /.pager-align
+  .pager-align
     padding: 0 2.5%
 
 // in
