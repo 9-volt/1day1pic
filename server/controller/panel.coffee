@@ -9,9 +9,15 @@ dateHelper = require('../helpers/date')
 
 panelController =
   get: (req, res)->
-    res.render 'upload',
-      layout: 'panel'
-      today: dateHelper.getTextFormat(new Date())
+    # Load list of uploaded pictures
+    db.Picture.findAll({where: {UserId: req.user.id}, order: [['date', 'DESC']], include: [db.Post]})
+      .error (error)->
+        res.send('404 - ' + error.message)
+      .then (pictures)->
+        res.render 'upload',
+          layout: 'panel'
+          today: dateHelper.getTextFormat(new Date())
+          pictures: pictures
 
   pictureUpload: (req, res)->
     busboy = new Busboy({ headers: req.headers })
