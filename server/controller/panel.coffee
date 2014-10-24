@@ -11,12 +11,14 @@ panelController =
   get: (req, res)->
     res.render 'upload',
       layout: 'panel'
+      today: dateHelper.getTextFormat(new Date())
 
   pictureUpload: (req, res)->
     busboy = new Busboy({ headers: req.headers })
     tmpFolderPath = req.app.get('settings').tmpFolderPath
     tmpPicturePath = null
     pictureTitle = 'no title'
+    pictureDate = null
 
     busboy.on 'file', (fieldname, file, filename, encoding, mimetype) ->
       tmpPicturePath = path.join(tmpFolderPath, filename)
@@ -25,13 +27,15 @@ panelController =
     busboy.on 'field', (fieldname, val, fieldnameTruncated, valTruncated)->
       if fieldname is 'title' and val
         pictureTitle = val
+      else if fieldname is 'date' and val
+        pictureDate = val
 
     busboy.on 'finish', ()->
-      panelController.processFile(req, res, tmpPicturePath, pictureTitle)
+      panelController.processFile(req, res, tmpPicturePath, pictureTitle, pictureDate)
 
     req.pipe busboy # start piping the data.
 
-  processFile: (req, res, picturePath, pictureTitle)->
+  processFile: (req, res, picturePath, pictureTitle, pictureDate)->
     if not fs.existsSync(picturePath) then return res.send '404 - uploaded picture does not exist'
 
     # TODO: Check if file is image
@@ -40,8 +44,13 @@ panelController =
     panelController.getExifData picturePath, (err, data)->
       if err then return res.send '404 - error extracting exif data from image, ' + err.message
 
-      exifDate = dateHelper.parseExifFormat(data.exif?.DateTimeOriginal)
-      date = dateHelper.getUtcDayStart(exifDate)
+      if data.exif?.DateTimeOriginal?
+        exifDate = dateHelper.parseExifFormat(data.exif?.DateTimeOriginal)
+        date = dateHelper.getUtcDayStart(exifDate)
+      else
+        date = dateHelper.getUtcDayStart(dateHelper.parseTextFormat(pictureDate))
+
+      console.log date
 
       panelController.thisDayPictureExists date, req.user, (err, exists)->
         if err then return res.send '404 - error while checking for same day image', + err.message

@@ -23,3 +23,8 @@ module.exports =
   parseExifFormat: (str)->
     moment(str, 'YYYY:MM:DD HH:mm:ss')
 
+  getTextFormat: (date)->
+    moment(date).format('DD-MM-YYYY')
+
+  parseTextFormat: (str)->
+    moment(str, 'DD-MM-YYYY')

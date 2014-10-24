@@ -1,7 +1,14 @@
 {{#if message}}{{message}}{{/if}}
 
 <form action="/panel/pictures/upload" method="post" enctype="multipart/form-data">
+  <label for="title">Title</label>
   <input type="text" id="title" name="title">
+  <br>
+  <label for="file">Image</label>
   <input type="file" name="file" id="file">
+  <br>
+  <label for="date">Date</label>
+  <input type="text" id="date" name="date" value="{{today}}">
+  <br>
   <button type="submit">Submit</button>
 </form>
