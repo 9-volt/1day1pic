@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes)->
                 Sequelize.and
                   date: {gt: post.date}
                 ,
-                  date: {gt: new Date(Date.now() - 86400000*3)}
+                  date: {lt: new Date(Date.now() - 86400000*3)}
             )
           order: [['date', 'ASC']]
         .error (error)->
