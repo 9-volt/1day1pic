@@ -48,9 +48,9 @@ panelController =
 
     # Extract
     panelController.getExifData picturePath, (err, data)->
-      if err then return res.send '404 - error extracting exif data from image, ' + err.message
+      # if err then return res.send '404 - error extracting exif data from image, ' + err.message
 
-      if data.exif?.DateTimeOriginal?
+      if not err? and data.exif?.DateTimeOriginal?
         exifDate = dateHelper.parseExifFormat(data.exif?.DateTimeOriginal)
         date = dateHelper.getUtcDayStart(exifDate)
       else
@@ -81,16 +81,22 @@ panelController =
               return res.send 'success, id: ' + picture.id
 
   getExifData: (picturePath, cb)->
+    cbSent = false
     try
       new ExifImage(
         image: picturePath
       , (error, exifData) ->
+
+        if cbSent then return
+        cbSent = true
+
         if error
           return cb(error, null)
         else # Do something with your data!
           return cb(null, exifData)
       )
     catch error
+      if cbSent then return
       return cb(error, null)
 
   thisDayPictureExists: (date, user, cb)->
