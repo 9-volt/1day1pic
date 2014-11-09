@@ -1,7 +1,12 @@
 {{#if message}}{{message}}{{/if}}
 
-<form action="/auth/local" method="post">
-  <input type="email" id="email" name="email">
-  <input type="password" id="password" name="password">
-  <button type="submit">Submit</button>
-</form>
+<div class="container">
+
+  <form class="form-signin" role="form" action="/auth/local" method="post">
+    <h2 class="form-signin-heading">please sign in</h2>
+    <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus>
+    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+  </form>
+
+</div>
