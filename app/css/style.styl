@@ -130,7 +130,19 @@ th
       background-color $c_turquoise
 
   .pager-align
+    position: relative
     padding: 0 2.5%
+    margin-top 0
+
+    li
+      position: absolute
+      top 20px
+      left 0
+      display: block
+
+      &.next
+        left auto
+        right 0
 
 // in
 @import 'pages/index'

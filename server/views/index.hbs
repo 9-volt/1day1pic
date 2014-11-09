@@ -1,15 +1,14 @@
 <div class="container">
-  <h1>{{date_format post.date}}</h1>{{post.title}}
+  <ul class="pager pager-align">
+    {{#if previousPostLink}}<li class="previous"><a href="{{previousPostLink}}">&larr; Older</a></li>{{/if}}
+    {{#if nextPostLink}}<li class="next"><a href="{{nextPostLink}}">Newer &rarr;</a></li>{{/if}}
+  </ul>
+
+  <h1>{{date_format post.date}}</h1>
   {{#if post.title}}<h2>{{post.title}}</h2>{{/if}}
 
   <div class="pictures pictures-{{pictures.length}}">
     {{#if picture1}}{{> picture picture1}}{{/if}}
     {{#if picture2}}{{> picture picture2}}{{/if}}
   </div>
-
-  <ul class="pager pager-align">
-    {{#if previousPostLink}}<li class="previous"><a href="{{previousPostLink}}">&larr; Older</a></li>{{/if}}
-    {{#if nextPostLink}}<li class="next"><a href="{{nextPostLink}}">Newer &rarr;</a></li>{{/if}}
-  </ul>
-
 </div>
