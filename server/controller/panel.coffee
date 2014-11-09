@@ -1,3 +1,4 @@
+_ = require('lodash')
 fs = require('fs')
 path = require('path')
 db = require('../models')
@@ -12,12 +13,24 @@ panelController =
     # Load list of uploaded pictures
     db.Picture.findAll({where: {UserId: req.user.id}, order: [['date', 'DESC']], include: [db.Post]})
       .error (error)->
-        res.send('404 - ' + error.message)
+        res.render 'upload',
+          layout: 'panel'
+          today: dateHelper.getTextFormat(new Date())
+          pictures: null
+          message:
+            text: 'Failed to load submited pictures'
+            type: 'error'
       .then (pictures)->
+        message = req.flash 'message'
+        # Get first fount picture id from messages
+        pictureId = if message? and message.length > 0 then _.first(message.filter((e)->e.pictureId))?.pictureId else 0
+
         res.render 'upload',
           layout: 'panel'
           today: dateHelper.getTextFormat(new Date())
           pictures: pictures
+          message: message
+          pictureId: pictureId
 
   pictureUpload: (req, res)->
     busboy = new Busboy({ headers: req.headers })
@@ -42,14 +55,18 @@ panelController =
     req.pipe busboy # start piping the data.
 
   processFile: (req, res, picturePath, pictureTitle, pictureDate)->
-    if not fs.existsSync(picturePath) then return res.send '404 - uploaded picture does not exist'
+    sendError = (text='Error')->
+      req.flash 'message',
+        text: text
+        type: 'danger'
+      res.redirect('/panel')
+
+    if not fs.existsSync(picturePath) then return sendError 'Uploaded picture does not exist'
 
     # TODO: Check if file is image
 
     # Extract
     panelController.getExifData picturePath, (err, data)->
-      # if err then return res.send '404 - error extracting exif data from image, ' + err.message
-
       if not err? and data.exif?.DateTimeOriginal?
         exifDate = dateHelper.parseExifFormat(data.exif?.DateTimeOriginal)
         date = dateHelper.getUtcDayStart(exifDate)
@@ -57,18 +74,18 @@ panelController =
         date = dateHelper.getUtcDayStart(dateHelper.parseTextFormat(pictureDate))
 
       panelController.thisDayPictureExists date, req.user, (err, exists)->
-        if err then return res.send '404 - error while checking for same day image', + err.message
-        if exists then return res.send '404 - a picture for this day exists in database'
+        if err then return sendError 'Error while checking for same day image, ' + err.message
+        if exists then return sendError 'A picture for this day exists in database'
 
         pictureThumbPath = picturePath.replace(/(\.[^\.]+)$/, '_thumb$1')
 
         panelController.createThumbnail picturePath, pictureThumbPath, (err, image)->
-          if err then return res.send '404 - error while creating thumbnail, ' + err.message
+          if err then return sendError 'Error while creating thumbnail, ' + err.message
 
           # Move files to public folder
           publicFolder = req.app.get('settings').picturesFolderPath
           panelController.moveIntoPublic picturePath, pictureThumbPath, publicFolder, pictureTitle, (err, pictureName, thumbnailName)->
-            if err then return res.send '404 - error while moving pictures into public path'
+            if err then return sendError 'Error while moving pictures into public path'
 
             panelController.createPicture
               image: pictureName
@@ -77,8 +94,14 @@ panelController =
               date: date
               user: req.user
             , (err, picture)->
-              if err then return res.send '404 - error while persisting image to db'
-              return res.send 'success, id: ' + picture.id
+              if err
+                return sendError 'Error while persisting image to db'
+              else
+                req.flash 'message',
+                  text: 'Successfully added a new picture'
+                  type: 'success'
+                  pictureId: picture.id
+                return res.redirect '/panel'
 
   getExifData: (picturePath, cb)->
     cbSent = false

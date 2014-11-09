@@ -7,6 +7,7 @@ methodOverride = require('method-override')
 session = require('express-session')
 SessionStore = require('express-mysql-session')
 exphbs  = require('express-handlebars')
+flash = require('connect-flash')
 db = require('./models')
 fs = require('fs')
 passport = require('./helpers/passport')
@@ -57,6 +58,7 @@ app.use session
     user: config.username
     password: config.password
     database: config.database
+app.use(flash())
 # passport initialization
 app.use(passport.initialize())
 app.use(passport.session())

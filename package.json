@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "busboy": "^0.2.9",
+    "connect-flash": "^0.1.1",
     "easyimage": "^1.0.3",
     "exif": "^0.4.0",
     "express-mysql-session": "^0.2.0",
