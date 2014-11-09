@@ -23,7 +23,7 @@ panelController =
       .then (pictures)->
         message = req.flash 'message'
         # Get first fount picture id from messages
-        pictureId = if message? and message.length > 0 then _.first(message.filter((e)->e.pictureId))?.pictureId else 0
+        pictureId = if message? and message.length > 0 then +_.first(message.filter((e)->e.pictureId))?.pictureId else 0
 
         res.render 'upload',
           layout: 'panel'
@@ -31,6 +31,12 @@ panelController =
           pictures: pictures
           message: message
           pictureId: pictureId
+
+  sendError: (req, res, text='Error')->
+    req.flash 'message',
+      text: text
+      type: 'danger'
+    res.redirect('/panel')
 
   pictureUpload: (req, res)->
     busboy = new Busboy({ headers: req.headers })
@@ -55,11 +61,8 @@ panelController =
     req.pipe busboy # start piping the data.
 
   processFile: (req, res, picturePath, pictureTitle, pictureDate)->
-    sendError = (text='Error')->
-      req.flash 'message',
-        text: text
-        type: 'danger'
-      res.redirect('/panel')
+    sendError = (text)->
+      panelController.sendError req, res, text
 
     if not fs.existsSync(picturePath) then return sendError 'Uploaded picture does not exist'
 
@@ -202,5 +205,42 @@ panelController =
             picture.customSetPost post, (err)->
               if err then cb(err, null)
               cb null, picture
+
+  pictureRotate: (req, res)->
+    pictureId = req.params.id
+    sendError = (text)->
+      panelController.sendError req, res, text
+
+    # Find picture
+    db.Picture.find(pictureId)
+      .error (err)->
+        sendError 'Such picture does not exist in database'
+      .success (picture)->
+        thumbnail = path.join req.app.get('settings').picturesFolderPath, picture.thumbnail
+        image = path.join req.app.get('settings').picturesFolderPath, picture.image
+
+        panelController.rotate thumbnail, (err)->
+          if err then return sendError('Error while rotating thumbnail')
+
+          panelController.rotate image, (err)->
+            if err then return sendError('Error while rotating image')
+
+            # Rotate
+            req.flash 'message',
+              text: 'Succesfully rotated'
+              type: 'info'
+              pictureId: pictureId
+            res.redirect '/panel'
+
+  rotate: (picturePath, cb)->
+    easyimage.rotate
+      src: picturePath
+      dst: picturePath
+      degrees: 90
+    .then ->
+      cb(null)
+    , (err)->
+      cb(err)
+
 
 module.exports = panelController

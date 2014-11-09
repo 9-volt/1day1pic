@@ -35,7 +35,7 @@
   "dependencies": {
     "busboy": "^0.2.9",
     "connect-flash": "^0.1.1",
-    "easyimage": "^1.0.3",
+    "easyimage": "9-volt/node-easyimage",
     "exif": "^0.4.0",
     "express-mysql-session": "^0.2.0",
     "express-session": "^1.8.2",

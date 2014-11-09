@@ -42,8 +42,9 @@
         <thead>
           <tr>
             <th width="30">#</th>
-            <th width="300">Title</th>
-            <th width="100">Date</th>
+            <th>Title</th>
+            <th width="120">Date</th>
+            <th width="60">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -52,6 +53,7 @@
             <td>{{id}}</td>
             <td>{{title}}</td>
             <td>{{date_format Post.date}}</td>
+            <td><a class="btn btn-xs" href="/panel/pictures/{{id}}/rotate"><span class="glyphicon glyphicon-repeat"></span></a></td>
           </tr>
           {{/each}}
         </tbody>
