@@ -1,5 +1,5 @@
 <div class="container">
-  <ul class="pager pager-align">
+  <ul class="pager pager-align pager-top">
     {{#if previousPostLink}}<li class="previous"><a href="{{previousPostLink}}">&larr; Older</a></li>{{/if}}
     {{#if nextPostLink}}<li class="next"><a href="{{nextPostLink}}">Newer &rarr;</a></li>{{/if}}
   </ul>
@@ -12,4 +12,9 @@
     {{#if picture2}}{{> picture picture2}}{{/if}}
     <div class="clearfix"></div>
   </div>
+
+  <ul class="pager pager-align pager-bottom">
+    {{#if previousPostLink}}<li class="previous"><a href="{{previousPostLink}}">&larr; Older</a></li>{{/if}}
+    {{#if nextPostLink}}<li class="next"><a href="{{nextPostLink}}">Newer &rarr;</a></li>{{/if}}
+  </ul>
 </div>
