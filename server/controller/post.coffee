@@ -15,7 +15,7 @@ postController =
       order: [['date', 'DESC']]
       include: [db.Picture]
     .error (error)->
-      res.send('404')
+      res.render "404"
     .then (post)->
       postController.renderPost req, res, post
 
@@ -25,13 +25,13 @@ postController =
     # Get the post from date specified in params
     db.Post.find({where: {date: utcDayStart}, include: [db.Picture]})
       .error (error)->
-        res.send('404')
+        res.render "404"
       .then (post)=>
         postController.renderPost req, res, post
 
   renderPost: (req, res, post)->
     if not post?
-      res.send('404')
+      res.render "404"
     else
       # Pictures should be ordered randomly
       seed = Math.floor(Math.random() * 999)
