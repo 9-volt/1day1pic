@@ -52,6 +52,8 @@ app.use(methodOverride())
 app.use session
   secret: config.sessionSecret
   key: 'connect.sid'
+  resave: true
+  saveUninitialized: true
   store: new SessionStore
     host: config.host
     port: 3306
