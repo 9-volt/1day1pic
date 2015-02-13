@@ -76,7 +76,7 @@ db
     force: false
   .complete (err)->
     if err
-      throw err[0]
+      console.log err
     else
       server = app.listen(config.sitePort)
       console.log 'App started on port ' + config.sitePort
