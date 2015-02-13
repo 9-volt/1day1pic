@@ -14,7 +14,6 @@ Start developing with a local server, automatic files build and livereload:
 * `cd 1day1pic`
 * `cp config.sample.json config.json`. You may edit config.json in order to adjust to your environment
 * `npm install`
-* `npm install -g gulp`
 * `gulp`
 
 In order to build the project run `gulp build`
