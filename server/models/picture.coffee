@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes)->
     image: DataTypes.STRING
     thumbnail: DataTypes.STRING
     title:
-      type: DataTypes.TEXT
+      type: DataTypes.STRING(255)
       defaultValue: 'No title'
     location_coordinates:
       type: DataTypes.STRING
