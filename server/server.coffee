@@ -12,6 +12,8 @@ db = require('./models')
 fs = require('fs')
 passport = require('./helpers/passport')
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'development'
+
 # Configs
 config = require('./../config.json')[process.env.NODE_ENV]
 
