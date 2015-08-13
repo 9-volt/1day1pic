@@ -14,20 +14,20 @@ postController =
           lt: new Date(Date.now() - 86400000*3)
       order: [['date', 'DESC']]
       include: [db.Picture]
-    .error (error)->
-      res.render "404"
     .then (post)->
       postController.renderPost req, res, post
+    .catch (error)->
+      res.render "404"
 
   getDate: (req, res)->
     utcDayStart = dateHelper.getUtcDayStart(dateHelper.parseUrlFormat(req.param('date')))
 
     # Get the post from date specified in params
     db.Post.find({where: {date: utcDayStart}, include: [db.Picture]})
-      .error (error)->
-        res.render "404"
       .then (post)=>
         postController.renderPost req, res, post
+      .catch (error)->
+        res.render "404"
 
   renderPost: (req, res, post)->
     if not post?

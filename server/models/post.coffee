@@ -33,10 +33,10 @@ module.exports = (sequelize, DataTypes)->
                   date: {lt: new Date(Date.now() - 86400000*3)}
             )
           order: [['date', 'DESC']]
-        .error (error)->
-          cb error
         .then (post)->
           cb null, post
+        .catch (error)->
+          cb error
 
       getNextPost: (post, cb)->
         Post.find
@@ -54,15 +54,13 @@ module.exports = (sequelize, DataTypes)->
                   date: {lt: new Date(Date.now() - 86400000*3)}
             )
           order: [['date', 'ASC']]
-        .error (error)->
-          cb error
         .then (post)->
           cb null, post
+        .catch (error)->
+          cb error
 
       getOrCreateByDate: (date, cb)->
         Post.find({where: {date: date}})
-          .error (error)->
-            cb(error, null)
           .then (post)->
             if post
               cb(null, post)
@@ -70,7 +68,9 @@ module.exports = (sequelize, DataTypes)->
               Post.create
                 date: date
                 title: ''
-              .error (err)->
-                cb(err, null)
-              .success (post)->
+              .then (post)->
                 cb(null, post)
+              .catch (err)->
+                cb(err, null)
+          .catch (error)->
+            cb(error, null)

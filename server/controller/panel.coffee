@@ -12,14 +12,6 @@ panelController =
   get: (req, res)->
     # Load list of uploaded pictures
     db.Picture.findAll({where: {UserId: req.user.id}, order: [[db.Post, 'date', 'DESC']], include: [db.Post]})
-      .error (error)->
-        res.render 'upload',
-          layout: 'panel'
-          today: dateHelper.getTextFormat(new Date())
-          pictures: null
-          message:
-            text: 'Failed to load submited pictures'
-            type: 'error'
       .then (pictures)->
         message = req.flash 'message'
         # Get first fount picture id from messages
@@ -31,6 +23,18 @@ panelController =
           pictures: pictures
           message: message
           pictureId: pictureId
+      .catch (error)->
+        res.render 'upload',
+          layout: 'panel'
+          today: dateHelper.getTextFormat(new Date())
+          pictures: null
+          message: [
+            text: 'Failed to load submited pictures'
+            type: 'danger'
+          ,
+            text: error.message
+            type: 'info'
+          ]
 
   sendError: (req, res, text='Error')->
     req.flash 'message',
@@ -127,9 +131,7 @@ panelController =
 
   thisDayPictureExists: (date, user, cb)->
     db.Post.find({where: {date: date}, include: [db.Picture]})
-      .error (err)->
-        cb err, null
-      .success (post)->
+      .then (post)->
         if post? and post.Pictures?
           myPictures = post.Pictures.filter (picture)->
             picture.UserId is user.id
@@ -137,6 +139,8 @@ panelController =
           cb(null, myPictures.length > 0)
         else
           cb(null, false)
+      .catch (err)->
+        cb err, null
 
   createThumbnail: (picturePath, pictureThumbPath, cb)->
     # Get info about image
@@ -195,16 +199,16 @@ panelController =
         image: options.image
         thumbnail: options.thumbnail
         title: options.title
-      .error (err)->
-        cb err, null
-      .success (picture)->
+      .then (picture)->
         picture.setUser(options.user)
-          .error (err)->
-            cb err, null
-          .success ->
+          .then ->
             picture.customSetPost post, (err)->
               if err then cb(err, null)
               cb null, picture
+          .catch (err)->
+            cb err, null
+      .catch (err)->
+        cb err, null
 
   pictureRotate: (req, res)->
     pictureId = req.params.id
@@ -213,9 +217,7 @@ panelController =
 
     # Find picture
     db.Picture.find(pictureId)
-      .error (err)->
-        sendError 'Such picture does not exist in database'
-      .success (picture)->
+      .then (picture)->
         thumbnail = path.join req.app.get('settings').picturesFolderPath, picture.thumbnail
         image = path.join req.app.get('settings').picturesFolderPath, picture.image
 
@@ -231,6 +233,8 @@ panelController =
               type: 'info'
               pictureId: pictureId
             res.redirect '/panel'
+      .catch (err)->
+        sendError 'Such picture does not exist in database'
 
   rotate: (picturePath, cb)->
     easyimage.rotate

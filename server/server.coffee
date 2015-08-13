@@ -76,12 +76,11 @@ db
   .sequelize
   .sync
     force: false
-  .complete (err)->
-    if err
-      console.log err
-    else
-      server = app.listen(config.sitePort)
-      console.log 'App started on port ' + config.sitePort
+  .then (err)->
+    server = app.listen(config.sitePort)
+    console.log 'App started on port ' + config.sitePort
+  .catch (err)->
+    console.log err
 
 module.exports =
   stop: ()->

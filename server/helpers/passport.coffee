@@ -9,9 +9,9 @@ passport.serializeUser (user, done)->
 # Deserialize user
 passport.deserializeUser (id, done)->
   db.User.find({where: {id: id}})
-    .success  (user)->
+    .then  (user)->
       done(null, user)
-    .error (err)->
+    .catch (err)->
       done(err, null)
 
 # Use local strategy
@@ -21,14 +21,14 @@ passport.use new LocalStrategy
   ,
   (email, password, done)->
     db.User.find({where: {email: email }})
-      .success (user)->
+      .then (user)->
         if not user
           done(null, false, { message: 'Unknown user' })
         else if not user.authenticate(password)
           done(null, false, { message: 'Invalid password'})
         else
           done(null, user)
-      .error (err)->
+      .catch (err)->
         done(err)
 
 passport.requireAuth = (req, res, next)->

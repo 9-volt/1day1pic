@@ -40,11 +40,11 @@
     "express-mysql-session": "^0.2.0",
     "express-session": "^1.8.2",
     "lodash": "^2.4.1",
-    "moment": "2.8.3",
+    "moment": "*2.10.6",
     "mysql": "^2.5.1",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
-    "sequelize": "2.0.2",
-    "sequelize-cli": "1.2.0"
+    "sequelize": "^3.5.1",
+    "sequelize-cli": "^1.7.4"
   }
 }

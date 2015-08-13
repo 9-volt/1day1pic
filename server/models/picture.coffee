@@ -21,11 +21,11 @@ module.exports = (sequelize, DataTypes)->
     instanceMethods:
       customSetPost: (post, cb)->
         this.setPost(post)
-          .error (err)->
-            cb(err)
-          .success ->
+          .then ->
             post.increment({'available_pictures': 1})
-              .error (err)->
-                cb(err)
-              .success ->
+              .then ->
                 cb()
+              .catch (err)->
+                cb(err)
+          .catch (err)->
+            cb(err)
