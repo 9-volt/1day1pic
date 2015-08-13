@@ -216,7 +216,7 @@ panelController =
       panelController.sendError req, res, text
 
     # Find picture
-    db.Picture.find(pictureId)
+    db.Picture.findById(pictureId)
       .then (picture)->
         thumbnail = path.join req.app.get('settings').picturesFolderPath, picture.thumbnail
         image = path.join req.app.get('settings').picturesFolderPath, picture.image
@@ -234,7 +234,7 @@ panelController =
               pictureId: pictureId
             res.redirect '/panel'
       .catch (err)->
-        sendError 'Such picture does not exist in database'
+        sendError 'Such picture does not exist in the database'
 
   rotate: (picturePath, cb)->
     easyimage.rotate
@@ -246,5 +246,36 @@ panelController =
     , (err)->
       cb(err)
 
+  pictureDelete: (req, res)->
+    publicFolder = req.app.get('settings').picturesFolderPath
+    pictureId = req.params.id
+    sendError = (text)->
+      panelController.sendError req, res, text
+
+    # Check if picture exists
+    db.Picture.findById(pictureId)
+      .then (picture)->
+
+        pictureName = picture.image
+        pictureThumbnail = picture.thumbnail
+
+        # Destroy picture
+        picture.destroy()
+          .then (id) ->
+            # Remove files from server
+            fs.unlinkSync(path.join(publicFolder, pictureName))
+            fs.unlinkSync(path.join(publicFolder, pictureThumbnail))
+
+            # Success message
+            req.flash 'message',
+              text: 'Succesfully deleted'
+              type: 'info'
+            res.redirect '/panel'
+
+          .catch (err)->
+            sendError 'Was not able to destroy the picture'
+
+      .catch (err)->
+        sendError 'Such picture does not exist in the database'
 
 module.exports = panelController

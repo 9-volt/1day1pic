@@ -29,3 +29,12 @@ module.exports = (sequelize, DataTypes)->
                 cb(err)
           .catch (err)->
             cb(err)
+
+    hooks:
+      beforeDestroy: (picture, options)->
+        picture.getPost()
+          .then (post)->
+            if post.available_pictures is 1
+              post.destroy()
+            else
+              post.decrement({'available_pictures': 1})

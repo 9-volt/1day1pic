@@ -15,3 +15,4 @@ module.exports =
     app.get '/panel', passport.requireAuth, Panel.get
     app.post '/panel/pictures/upload', passport.requireAuth, Panel.pictureUpload
     app.get '/panel/pictures/:id/rotate', passport.requireAuth, Panel.pictureRotate
+    app.get '/panel/pictures/:id/delete', passport.requireAuth, Panel.pictureDelete

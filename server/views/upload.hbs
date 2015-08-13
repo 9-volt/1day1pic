@@ -53,7 +53,10 @@
             <td>{{id}}</td>
             <td>{{title}}</td>
             <td>{{date_format Post.date}}</td>
-            <td><a class="btn btn-xs" href="/panel/pictures/{{id}}/rotate"><span class="glyphicon glyphicon-repeat"></span></a></td>
+            <td>
+              <a class="btn btn-xs" href="/panel/pictures/{{id}}/rotate"><span class="glyphicon glyphicon-repeat"></span></a>
+              <a class="btn btn-xs" data-confirm="Are you sure?" href="/panel/pictures/{{id}}/delete"><span class="glyphicon glyphicon-trash"></span></a>
+            </td>
           </tr>
           {{/each}}
         </tbody>
