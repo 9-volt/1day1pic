@@ -44,7 +44,7 @@
             <th width="30">#</th>
             <th>Title</th>
             <th width="120">Date</th>
-            <th width="60">Actions</th>
+            <th width="120">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -55,6 +55,7 @@
             <td>{{date_format Post.date}}</td>
             <td>
               <a class="btn btn-xs" href="/panel/pictures/{{id}}/rotate"><span class="glyphicon glyphicon-repeat"></span></a>
+              <span class="btn btn-xs" data-popover="/pictures/{{thumbnail}}"><span class="glyphicon glyphicon-picture"></span></span>
               <a class="btn btn-xs" data-confirm="Are you sure?" href="/panel/pictures/{{id}}/delete"><span class="glyphicon glyphicon-trash"></span></a>
             </td>
           </tr>

@@ -5,3 +5,10 @@ $ ->
 
     if (window.confirm(confirmMessage))
       window.location.href = $(this).attr('href')
+
+  $('span[data-popover]').popover
+    html: true
+    trigger: 'hover'
+    placement: 'top'
+    content: ()->
+      return '<img src="' + $(this).data('popover') + '" width="100" height="100" />'
