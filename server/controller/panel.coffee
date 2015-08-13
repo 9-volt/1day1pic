@@ -11,7 +11,7 @@ dateHelper = require('../helpers/date')
 panelController =
   get: (req, res)->
     # Load list of uploaded pictures
-    db.Picture.findAll({where: {UserId: req.user.id}, order: [['date', 'DESC']], include: [db.Post]})
+    db.Picture.findAll({where: {UserId: req.user.id}, order: [[db.Post, 'date', 'DESC']], include: [db.Post]})
       .error (error)->
         res.render 'upload',
           layout: 'panel'
