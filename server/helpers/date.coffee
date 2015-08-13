@@ -5,7 +5,7 @@ module.exports =
     paramDate = moment(date)
 
     utcDayStart = moment()
-      .zone(0)
+      .utcOffset(0)
       .year(paramDate.year())
       .month(paramDate.month())
       .date(paramDate.date())
