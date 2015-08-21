@@ -74,11 +74,13 @@ panelController =
 
     # Extract
     panelController.getExifData picturePath, (err, data)->
-      if not err? and data.exif?.DateTimeOriginal?
+      if pictureDate
+        date = dateHelper.getUtcDayStart(dateHelper.parseTextFormat(pictureDate))
+      else if not err? and data.exif?.DateTimeOriginal?
         exifDate = dateHelper.parseExifFormat(data.exif?.DateTimeOriginal)
         date = dateHelper.getUtcDayStart(exifDate)
       else
-        date = dateHelper.getUtcDayStart(dateHelper.parseTextFormat(pictureDate))
+        date = dateHelter.getUtcDayStart(new Date()) # today
 
       panelController.thisDayPictureExists date, req.user, (err, exists)->
         if err then return sendError 'Error while checking for same day image, ' + err.message
