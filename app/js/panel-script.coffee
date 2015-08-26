@@ -18,6 +18,7 @@ $ ->
       reader = new FileReader
 
       reader.onload = (e) ->
+        $('#image-preview').show()
         $('#image-preview').attr 'src', e.target.result
         return
 
@@ -27,3 +28,5 @@ $ ->
   $('#file').change ->
     readFile this
     return
+
+  $('#image-preview').hide()
