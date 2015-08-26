@@ -12,3 +12,18 @@ $ ->
     placement: 'top'
     content: ()->
       return '<img src="' + $(this).data('popover') + '" width="100" height="100" />'
+
+  readFile = (input) ->
+    if input.files and input.files[0]
+      reader = new FileReader
+
+      reader.onload = (e) ->
+        $('#image-preview').attr 'src', e.target.result
+        return
+
+      reader.readAsDataURL input.files[0]
+    return
+
+  $('#file').change ->
+    readFile this
+    return
