@@ -20,6 +20,7 @@ $ ->
       reader.onload = (e) ->
         $('#image-preview').show()
         $('#image-preview img').attr 'src', e.target.result
+        cropImage()
         return
 
       reader.readAsDataURL input.files[0]
@@ -28,5 +29,18 @@ $ ->
   $('#file').change ->
     readFile this
     return
+
+  cropImage = () ->
+    $('#image-preview > img').cropper
+      aspectRatio: 1 / 1
+      crop: (e) ->
+        # Output the result data for cropping image.
+        console.log e.x
+        console.log e.y
+        console.log e.width
+        console.log e.height
+        console.log e.scaleX
+        console.log e.scaleY
+        return
 
   $('#image-preview').hide()
