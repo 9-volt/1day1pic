@@ -19,7 +19,7 @@ $ ->
 
       reader.onload = (e) ->
         $('#image-preview').show()
-        $('#image-preview').attr 'src', e.target.result
+        $('#image-preview img').attr 'src', e.target.result
         return
 
       reader.readAsDataURL input.files[0]
