@@ -22,19 +22,27 @@ module.exports = (sequelize, DataTypes)->
 
     instanceMethods:
 
-      # makeSalt: ->
-      #   crypto.randomBytes(16).toString 'base64'
+      makeSalt: ->
+        crypto.randomBytes(8).toString 'base64'
 
       authenticate: (plainText) ->
-        # @encryptPassword(plainText, @salt) is @password
-        plainText is @password
+        if ~@password.indexOf(':')
+          # If encripted password
+          [salt, password] = @password.split(':')
+          return @encryptPassword(plainText, salt) is password
+        else
+          # If plain text password
+          return plainText is @password
 
-      # encryptPassword: (password, salt) ->
-      #   return ''  if not password or not salt
-      #   salt = new Buffer(salt, 'base64')
-      #   crypto.pbkdf2Sync(password, salt, 10000, 64).toString 'base64'
+      encryptPassword: (password, salt) ->
+        return ''  if not password or not salt
+        salt = new Buffer(salt, 'base64')
+        crypto.pbkdf2Sync(password, salt, 10000, 64).toString 'base64'
 
       updatePassword: (plainText) ->
+        salt = @makeSalt()
+        newPassword = salt + ':' + @encryptPassword(plainText, salt)
+
         @updateAttributes({
-          password: plainText
+          password: newPassword
         })
