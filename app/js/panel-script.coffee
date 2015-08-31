@@ -1,4 +1,6 @@
 $ ->
+  $image = $('#image-preview > img')
+
   $('body').on 'click', 'a[data-confirm]', (ev)->
     ev.preventDefault()
     confirmMessage = $(this).data('confirm') || 'Are you'?
@@ -31,16 +33,15 @@ $ ->
     return
 
   cropImage = () ->
-    $('#image-preview > img').cropper
+    $image.cropper
       aspectRatio: 1 / 1
-      crop: (e) ->
-        # Output the result data for cropping image.
-        console.log e.x
-        console.log e.y
-        console.log e.width
-        console.log e.height
-        console.log e.scaleX
-        console.log e.scaleY
-        return
+      autoCropArea: 1
+
+  # Before submitting the form, extract the crop details, serialize them
+  # and store them into a hidden form field.
+  $('button:submit').on 'click', (e) ->
+    data = $image.cropper('getData')
+    $('#crop-details').val JSON.stringify data
+    return
 
   $('#image-preview').hide()
