@@ -48,6 +48,7 @@ panelController =
     tmpPicturePath = null
     pictureTitle = 'no title'
     pictureDate = null
+    cropData = null
 
     busboy.on 'file', (fieldname, file, filename, encoding, mimetype) ->
       tmpPicturePath = path.join(tmpFolderPath, filename)
@@ -58,13 +59,15 @@ panelController =
         pictureTitle = val
       else if fieldname is 'date' and val
         pictureDate = val
+      else if fieldname is 'crop-details' and val
+        cropData = JSON.parse(val)
 
     busboy.on 'finish', ()->
-      panelController.processFile(req, res, tmpPicturePath, pictureTitle, pictureDate)
+      panelController.processFile(req, res, tmpPicturePath, pictureTitle, pictureDate, cropData)
 
     req.pipe busboy # start piping the data.
 
-  processFile: (req, res, picturePath, pictureTitle, pictureDate)->
+  processFile: (req, res, picturePath, pictureTitle, pictureDate, cropData)->
     sendError = (text)->
       panelController.sendError req, res, text
 
@@ -80,7 +83,7 @@ panelController =
         exifDate = dateHelper.parseExifFormat(data.exif?.DateTimeOriginal)
         date = dateHelper.getUtcDayStart(exifDate)
       else
-        date = dateHelter.getUtcDayStart(new Date()) # today
+        date = dateHelper.getUtcDayStart(new Date()) # today
 
       panelController.thisDayPictureExists date, req.user, (err, exists)->
         if err then return sendError 'Error while checking for same day image, ' + err.message
@@ -88,29 +91,32 @@ panelController =
 
         pictureThumbPath = picturePath.replace(/(\.[^\.]+)$/, '_thumb$1')
 
-        panelController.createThumbnail picturePath, pictureThumbPath, (err, image)->
-          if err then return sendError 'Error while creating thumbnail, ' + err.message
+        panelController.pictureCrop picturePath, cropData, (err)->
+          if err then return sendError('Error while cropping image')
 
-          # Move files to public folder
-          publicFolder = req.app.get('settings').picturesFolderPath
-          panelController.moveIntoPublic picturePath, pictureThumbPath, publicFolder, pictureTitle, (err, pictureName, thumbnailName)->
-            if err then return sendError 'Error while moving pictures into public path'
+          panelController.createThumbnail picturePath, pictureThumbPath, (err, image)->
+            if err then return sendError 'Error while creating thumbnail, ' + err.message
 
-            panelController.createPicture
-              image: pictureName
-              thumbnail: thumbnailName
-              title: pictureTitle
-              date: date
-              user: req.user
-            , (err, picture)->
-              if err
-                return sendError 'Error while persisting image to db'
-              else
-                req.flash 'message',
-                  text: 'Successfully added a new picture'
-                  type: 'success'
-                  pictureId: picture.id
-                return res.redirect '/panel'
+            # Move files to public folder
+            publicFolder = req.app.get('settings').picturesFolderPath
+            panelController.moveIntoPublic picturePath, pictureThumbPath, publicFolder, pictureTitle, (err, pictureName, thumbnailName)->
+              if err then return sendError 'Error while moving pictures into public path'
+
+              panelController.createPicture
+                image: pictureName
+                thumbnail: thumbnailName
+                title: pictureTitle
+                date: date
+                user: req.user
+              , (err, picture)->
+                if err
+                  return sendError 'Error while persisting image to db'
+                else
+                  req.flash 'message',
+                    text: 'Successfully added a new picture'
+                    type: 'success'
+                    pictureId: picture.id
+                  return res.redirect '/panel'
 
   getExifData: (picturePath, cb)->
     cbSent = false
@@ -211,6 +217,19 @@ panelController =
             cb err, null
       .catch (err)->
         cb err, null
+
+  pictureCrop: (picturePath, cropData, cb)->
+    easyimage.crop
+      src: picturePath
+      dst: picturePath
+      x: cropData.x
+      y: cropData.y
+      cropwidth: cropData.width
+      cropheight: cropData.height
+    .then (image) ->
+      cb(null)
+    , (err)->
+      cb(err)
 
   pictureRotate: (req, res)->
     pictureId = req.params.id
