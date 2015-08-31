@@ -7,14 +7,10 @@ authController =
       # already logged in
       res.redirect('/panel')
     else
-      # not logged in, show the login form, remember to pass the message
-      # for displaying when error happens
+      # not logged in
       res.render 'login',
         layout: 'panel'
-        message: req.session.messages
-
-      # and then remember to clear the message
-      req.session.messages = null
+        message: req.flash 'message'
 
   postLogin: (req, res, next)->
     # ask passport to authenticate
@@ -23,20 +19,23 @@ authController =
       # if error happens
       return next(err) if err
       unless user
-        # if authentication fail, get the error message that we set
-        # from previous (info.message) step, assign it into to
-        # req.session and redirect to the login page again to display
-        req.session.messages = info.message
+        req.flash 'message',
+          text: info.message
+          type: 'danger'
         return res.redirect('/login')
 
       # if everything's OK
       req.logIn user, (err) ->
         if err
-          req.session.messages = 'Error'
+          req.flash 'message',
+            text: 'Error'
+            type: 'danger'
           return next(err)
 
         # set the message
-        req.session.messages = 'Login successfully'
+        req.flash 'message',
+          text: 'Successful authentication'
+          type: 'success'
         res.redirect '/panel'
 
       return

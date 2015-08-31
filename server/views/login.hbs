@@ -1,12 +1,25 @@
-{{#if message}}{{message}}{{/if}}
-
 <div class="container">
 
-  <form class="form-signin" role="form" action="/auth/local" method="post">
-    <h2 class="form-signin-heading">please sign in</h2>
-    <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus>
-    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-  </form>
+  {{#if message}}
+  <div class="row">
+    <div class="col-md-6 col-md-push-3">
+      {{#each message}}
+      <div class="alert alert-{{#if type}}{{type}}{{else}}info{{/if}} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <strong>{{title}}</strong> {{text}}
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  <div class="row">
+    <form class="form-signin" role="form" action="/auth/local" method="post">
+      <h2 class="form-signin-heading">please sign in</h2>
+      <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus>
+      <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+  </div>
 
 </div>
