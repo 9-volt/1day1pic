@@ -1,5 +1,6 @@
 Post = require('./controller/post')
 Panel = require('./controller/panel')
+Settings = require('./controller/settings')
 Auth = require('./controller/auth')
 passport = require('./helpers/passport')
 
@@ -13,6 +14,8 @@ module.exports =
     app.get '/logout', Auth.getLogout
 
     app.get '/panel', passport.requireAuth, Panel.get
+    app.get '/panel/settings', passport.requireAuth, Settings.get
+    app.post '/panel/settings', passport.requireAuth, Settings.post
     app.post '/panel/pictures/upload', passport.requireAuth, Panel.pictureUpload
     app.get '/panel/pictures/:id/rotate', passport.requireAuth, Panel.pictureRotate
     app.get '/panel/pictures/:id/delete', passport.requireAuth, Panel.pictureDelete

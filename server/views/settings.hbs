@@ -1,0 +1,30 @@
+<div class="container">
+  <a href="/panel" class="btn btn-lg btn-header"><span class="glyphicon glyphicon-home"></span></a>
+  <h1>Settings</h1>
+
+  {{#if message}}
+  <div class="row">
+    <div class="col-md-6 col-md-push-3">
+      {{#each message}}
+      <div class="alert alert-{{#if type}}{{type}}{{else}}info{{/if}} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <strong>{{title}}</strong> {{text}}
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  <div class="row">
+    <div class="col-md-6 col-md-push-3">
+      <form role="form" action="/panel/settings" method="post">
+        <div class="form-group">
+          <label for="password">New password</label>
+          <input type="password" id="password" name="password" class="form-control" placeholder="Password">
+        </div>
+        <button type="submit" class="btn btn-success">Save</button>
+      </form>
+    </div>
+  </div>
+
+</div>

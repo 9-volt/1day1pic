@@ -33,3 +33,8 @@ module.exports = (sequelize, DataTypes)->
       #   return ''  if not password or not salt
       #   salt = new Buffer(salt, 'base64')
       #   crypto.pbkdf2Sync(password, salt, 10000, 64).toString 'base64'
+
+      updatePassword: (plainText) ->
+        @updateAttributes({
+          password: plainText
+        })
