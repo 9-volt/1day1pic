@@ -91,7 +91,7 @@ panelController =
 
         pictureThumbPath = picturePath.replace(/(\.[^\.]+)$/, '_thumb$1')
 
-        panelController.pictureCrop picturePath, cropData, (err)->
+        panelController.pictureRotateAndCrop picturePath, cropData, (err)->
           if err then return sendError('Error while cropping image')
 
           panelController.createThumbnail picturePath, pictureThumbPath, (err, image)->
@@ -217,6 +217,14 @@ panelController =
             cb err, null
       .catch (err)->
         cb err, null
+
+  pictureRotateAndCrop: (picturePath, cropData, cb)->
+    # Get rid of EXIF.orientation data and rotate image to horizontal orientation
+    easyimage.exec "convert #{picturePath} -auto-orient #{picturePath}"
+    .then ->
+      panelController.pictureCrop(picturePath, cropData, cb)
+    , (err)->
+      cb(err)
 
   pictureCrop: (picturePath, cropData, cb)->
     easyimage.crop
