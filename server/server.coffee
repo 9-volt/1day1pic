@@ -30,7 +30,7 @@ tmpPath = __dirname + '/../tmp'
 if not fs.existsSync(picturesPath) then fs.mkdir(picturesPath)
 if not fs.existsSync(tmpPath) then fs.mkdir(tmpPath)
 
-app = express()
+app = require('./helpers/app')
 # Folders
 app.set 'settings',
   picturesFolderPath: picturesPath
