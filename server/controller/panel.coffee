@@ -220,7 +220,7 @@ panelController =
 
   pictureRotateAndCrop: (picturePath, cropData, cb)->
     # Get rid of EXIF.orientation data and rotate image to horizontal orientation
-    easyimage.exec "convert #{picturePath} -auto-orient #{picturePath}"
+    easyimage.exec [picturePath, '-auto-orient', picturePath]
     .then ->
       panelController.pictureCrop(picturePath, cropData, cb)
     , (err)->
