@@ -11,6 +11,7 @@ flash = require('connect-flash')
 db = require('./models')
 fs = require('fs')
 passport = require('./helpers/passport')
+fb = require('./helpers/fb')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
@@ -35,6 +36,7 @@ app = require('./helpers/app')
 app.set 'settings',
   picturesFolderPath: picturesPath
   tmpFolderPath: tmpPath
+  config: config
 # View engine
 app.set('views', __dirname + '/views/');
 app.engine '.hbs', exphbs
@@ -78,6 +80,7 @@ db
     force: false
   .then (err)->
     server = app.listen(config.sitePort)
+    fb.start() # Start FB posting
     console.log 'App started on port ' + config.sitePort
   .catch (err)->
     console.log err

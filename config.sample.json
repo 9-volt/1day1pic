@@ -7,7 +7,9 @@
     "dialect": "mysql",
     "sessionSecret": "secret",
     "sitePort": 8000,
-    "baseUrl": "http://localhost:8000"
+    "baseUrl": "http://localhost:8000",
+    "facebookPageId": "page id",
+    "facebookPageToken": "page token"
   },
   "test": {
     "username": "root",
@@ -17,7 +19,9 @@
     "dialect": "mysql",
     "sessionSecret": "secret",
     "sitePort": 8000,
-    "baseUrl": "http://localhost:8000"
+    "baseUrl": "http://localhost:8000",
+    "facebookPageId": "page id",
+    "facebookPageToken": "page token"
   },
   "production": {
     "username": "root",
@@ -27,6 +31,8 @@
     "dialect": "mysql",
     "sessionSecret": "secret",
     "sitePort": 80,
-    "baseUrl": "http://1day1pic.9vo.lt"
+    "baseUrl": "http://1day1pic.9vo.lt",
+    "facebookPageId": "page id",
+    "facebookPageToken": "page token"
   }
 }

@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes)->
       type: DataTypes.STRING
       defaultValue: '0,0'
     location: DataTypes.STRING(127)
+    posted_to_fb:
+      type: DataTypes.BOOLEAN
+      defaultValue: false
   ,
     classMethods:
       associate: (models)->
