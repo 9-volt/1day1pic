@@ -46,7 +46,8 @@
             <th width="30">#</th>
             <th>Title</th>
             <th width="120">Date</th>
-            <th width="120">Actions</th>
+            <th width="20">I</th>
+            <th width="110">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -55,6 +56,7 @@
             <td>{{id}}</td>
             <td>{{title}}</td>
             <td>{{date_format Post.date}}</td>
+            <td>{{#if posted_to_fb}}<span class="glyphicon glyphicon-leaf color-green" title="Published to facebook"></span>{{/if}}</td>
             <td>
               <a class="btn btn-xs" href="/panel/pictures/{{id}}/rotate"><span class="glyphicon glyphicon-repeat"></span></a>
               <span class="btn btn-xs" data-popover="/pictures/{{thumbnail}}"><span class="glyphicon glyphicon-picture"></span></span>
