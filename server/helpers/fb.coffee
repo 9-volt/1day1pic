@@ -84,9 +84,7 @@ module.exports =
         ]
 
       .then (picture)->
-
         if picture
-          console.log picture.PostId
           resolve picture.PostId
         else
           reject new Error 'No unpublished picture found'
@@ -146,7 +144,7 @@ module.exports =
         titles.push pictures[1].title
 
       if titles.length is 0
-        description = null
+        description = 'These pictures have no title oO'
       else if titles.length is 1
         description = titles[0]
       else
