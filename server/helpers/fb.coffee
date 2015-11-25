@@ -58,7 +58,7 @@ module.exports =
           posted_to_fb: $or: [0, null]
         group: ['PostId']
         having: ['COUNT(PostId) = ?', 2]
-        order: [db.Sequelize.fn('RAND', '')]
+        order: [db.Sequelize.fn('RAND')]
 
       .then (picture)->
         if picture
@@ -77,7 +77,7 @@ module.exports =
           posted_to_fb: $or: [0, null]
         group: ['PostId']
         having: ['COUNT(PostId) = ?', 1]
-        order: [db.Sequelize.fn('RAND', '')]
+        order: [db.Sequelize.fn('RAND')]
         include: [
           model: db.Post
           where: date: {lt: new Date(Date.now() - 86400000*3)}
