@@ -25,7 +25,7 @@ module.exports =
 
     setInterval =>
       @publishToFacebook()
-    , 1000 * 3600 * 4 # Every 4 hours
+    , 13333 * 1000 # Every 3 hours, 42 mins and 13 sec
 
     @publishToFacebook()
 
