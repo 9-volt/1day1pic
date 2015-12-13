@@ -40,10 +40,8 @@ module.exports =
 
   getPostId: ->
     new Promise (resolve, reject)=>
-      # Chain or responsibility
+      # Chain of responsibility
       @postWith2UnpublishedPictures()
-        .then (postId)->
-          resolve postId
         .catch @postWith1UnpublishedPicture
         .then (postId)->
           resolve postId
