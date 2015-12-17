@@ -112,7 +112,7 @@ module.exports =
       if pictures.length is 0
         reject new Error 'No pictures to create a thumbnail from'
       else if pictures.length is 1
-        pictures.thumbnail = pictures[0].thumbnail
+        pictures.thumbnail = pictures[0].thumbnail.replace(/\s/g, '%20')
         resolve pictures
       else
         thumbnailPath1 = path.join app.get('settings').picturesFolderPath, pictures[0].thumbnail
