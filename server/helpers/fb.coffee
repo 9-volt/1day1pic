@@ -155,7 +155,7 @@ module.exports =
           # backdated_time: Math.floor(postDate.getTime())
           link: link
           picture: picture
-          name: "Picture#{pictures.length > 1 ? 's' : ''} from #{moment(postDate).format('DD MMM YYYY')}"
+          name: "Picture#{if pictures.length > 1 then 's' else ''} from #{moment(postDate).format('DD MMM YYYY')}"
           caption: link.replace(/^(https?|ftp):\/\//, '') # Remove http part
           description: description
 
