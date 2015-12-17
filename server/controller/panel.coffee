@@ -173,7 +173,7 @@ panelController =
     thumbnailExtension = path.extname(pictureThumbPath)
 
     # Generate file name from title
-    newPictureBaseName = pictureTitle.replace(/[^a-zA-Z0-9 -]/g, '').replace(/\s/, '-')
+    newPictureBaseName = pictureTitle.replace(/[^a-zA-Z0-9 -]/g, '').replace(/\s/g, '-')
     newPictureName = newPictureBaseName + pictureExtension
     newThumbnailName = newPictureBaseName + '_thumb' + pictureExtension
 
