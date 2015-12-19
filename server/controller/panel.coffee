@@ -10,31 +10,72 @@ dateHelper = require('../helpers/date')
 
 panelController =
   get: (req, res)->
-    # Load list of uploaded pictures
-    db.Picture.findAll({where: {UserId: req.user.id}, order: [[db.Post, 'date', 'DESC']], include: [db.Post]})
-      .then (pictures)->
-        message = req.flash 'message'
-        # Get first fount picture id from messages
-        pictureId = if message? and message.length > 0 then +_.first(message.filter((e)->e.pictureId))?.pictureId else 0
+    Promise.resolve
+      req: req
+      res: res
+      totalPictures: 0
+      postedPictures: 0
+      pictures: []
+    .then panelController.countTotalPictures
+    .then panelController.countPostedPictures
+    .then panelController.getPictures
+    .then panelController.renderPictures
+    .catch panelController.renderError
 
-        res.render 'upload',
-          layout: 'panel'
-          today: dateHelper.getTextFormat(new Date())
-          pictures: pictures
-          message: message
-          pictureId: pictureId
-      .catch (error)->
-        res.render 'upload',
-          layout: 'panel'
-          today: dateHelper.getTextFormat(new Date())
-          pictures: null
-          message: [
-            text: 'Failed to load submited pictures'
-            type: 'danger'
-          ,
-            text: error.message
-            type: 'info'
-          ]
+  countTotalPictures: (data)->
+    new Promise (resolve, reject)->
+      db.Picture.count()
+        .then (count)->
+          data.totalPictures = count
+          resolve data
+        .catch (error)->
+          reject error
+
+  countPostedPictures: (data)->
+    new Promise (resolve, reject)->
+      db.Picture.count({where: {posted_to_fb: true}})
+        .then (count)->
+          data.postedPictures = count
+          resolve data
+        .catch (error)->
+          reject error
+
+  getPictures: (data)->
+    new Promise (resolve, reject)->
+      db.Picture.findAll({where: {UserId: data.req.user.id}, order: [[db.Post, 'date', 'DESC']], include: [db.Post]})
+        .then (pictures)->
+          data.pictures = pictures
+          console.log 'pics'
+          resolve data
+        .catch (error)->
+          reject error
+
+  renderPictures: (data)->
+    message = data.req.flash 'message'
+    # Get first fount picture id from messages
+    pictureId = if message? and message.length > 0 then +_.first(message.filter((e)->e.pictureId))?.pictureId else 0
+
+    data.res.render 'upload',
+      layout: 'panel'
+      today: dateHelper.getTextFormat(new Date())
+      pictures: data.pictures
+      message: message
+      pictureId: pictureId
+      totalPictures: data.totalPictures
+      postedPictures: data.postedPictures
+
+  renderError: (error)->
+    data.res.render 'upload',
+      layout: 'panel'
+      today: dateHelper.getTextFormat(new Date())
+      pictures: null
+      message: [
+        text: 'Failed to load submited pictures'
+        type: 'danger'
+      ,
+        text: error.message
+        type: 'info'
+      ]
 
   sendError: (req, res, text='Error')->
     req.flash 'message',
